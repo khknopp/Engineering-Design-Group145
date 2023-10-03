@@ -1,0 +1,41 @@
+body {
+  font-family: 'Gabarito', cursive;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.container {
+  width: 80%;
+  margin: 5vh auto;
+}
+
+#main h1 {
+  font-size: 45px;
+}
+
+.big {
+  font-size: 3rem;
+}
+
+.button, input[type="submit"] {
+  padding: 15px 30px;
+  background-color: #0050a0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 20px;
+  border-radius: 5px;
+  padding: 15px 30px;
+}
+
+.button:hover {
+  background-color: #003d79;
+}
+
+footer {
+  text-align: center;
+  margin-top: 7rem;
+}

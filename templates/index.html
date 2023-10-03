@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block includes %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"/>
+{% endblock %}
+
+
+{% block content %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+           {{ message }}
+        {% endfor %}
+     {% endif %}
+  {% endwith %}
+  <div>
+    <h1>
+      <br/><br/>
+      Please choose what you want to view:
+      <br/><br/>
+    </h1>
+  </div>
+  <!--- Action Buttons --->
+  <form method="post">
+    <input type="submit" name="current" value="View current session" class="button">
+    <input type="submit" name="progress" value="View progress" class="button">
+  </form>
+{% endblock %}

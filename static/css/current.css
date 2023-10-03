@@ -1,0 +1,11 @@
+.row{
+  width: 100%;
+  display: flex;
+  text-align: center;
+}
+
+.column{
+  width: 30%;
+  margin: 2%;
+  display: inline-block;
+}
