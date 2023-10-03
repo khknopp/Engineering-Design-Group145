@@ -1,2 +1,2 @@
-# flask-workshop
-This is a basic flask webapp, that you can use as a boilerplate for your projects.
+# Engineering Design Group 145 App
+More information will follow.
