@@ -35,7 +35,7 @@ void loop() {
     
     while (central.connected()) {
       int randomNumber = random(0, 1024);
-      randomCharacteristic.writeValue(randomNumber);
+      randomCharacteristic.writeValue(9985071436);
       delay(1000);
     }
 
