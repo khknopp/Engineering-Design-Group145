@@ -1,7 +1,7 @@
 #include <ArduinoBLE.h>
 
 BLEService randomService("180D");  // Create a BLE service using a custom UUID
-BLEIntCharacteristic randomCharacteristic("2A37", BLENotify);
+BLEIntCharacteristic randomCharacteristic("2A37", BLERead);
 
 void setup() {
   // Start serial communication for debugging
