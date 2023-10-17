@@ -3,6 +3,11 @@
 BLEService randomService("180D");  // Create a BLE service using a custom UUID
 BLEIntCharacteristic randomCharacteristic("2A37", BLERead);
 
+const int F1_PIN = 3;
+const int F2_PIN = 4;
+
+int value;
+
 void setup() {
   // Start serial communication for debugging
   Serial.begin(9600);
@@ -35,6 +40,10 @@ void loop() {
     
     while (central.connected()) {
       int randomNumber = random(0, 1024);
+      value = analogRead(F1_PIN);
+      Serial.println(value);
+      value = analogRead(F2_PIN);
+      Serial.println(value);
       randomCharacteristic.writeValue(9985071436);
       delay(1000);
     }

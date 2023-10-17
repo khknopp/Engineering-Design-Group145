@@ -75,7 +75,7 @@ def main():
 async def whatever():
     global client, char
     client, char = await connect()
-    return redirect(url_for("current"))
+    print(client, char)
 
 # @app.route('/current')
 # async def current():

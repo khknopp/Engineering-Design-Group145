@@ -15,7 +15,7 @@ async def connect():
         print("RP2040 device not found!")
         return None, None
 
-    client = BleakClient(rp2040_address, timeout=30)
+    client = BleakClient(rp2040_address, timeout=60)
     print("Connecting to device...")
     connected = await client.connect()
 
