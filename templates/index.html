@@ -3,26 +3,42 @@
 {% block includes %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"/>
 {% endblock %}
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 {% block content %}
   {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
-           {{ message }}
+           {{ message }} 
         {% endfor %}
      {% endif %}
   {% endwith %}
-  <div>
-    <h1>
-      <br/><br/>
-      Please choose what you want to view:
-      <br/><br/>
-    </h1>
-  </div>
-  <!--- Action Buttons --->
+  
   <form method="post">
     <input type="submit" name="current" value="View current session" class="button">
     <input type="submit" name="progress" value="View progress" class="button">
   </form>
+  <div class="main-field">
+      <div style="text-align: center; margin-top: 20px;">
+      <img src="/static/images/logo2.jpg" style="max-width:80%;height:auto; border-radius: 10px;">
+      </div>
+      <div class="main-field-text">
+        <p>Ege Baykara</p> <p>Nout van Bommel</p> <p>Fenna van Hemmen</p> <p>Kajetan Knopp</p> 
+          <p>Eva Lamas Loureiro</p> <p>Ella Steer</p>
+        
+      </div>
+  </div>
+
+<script>
+  function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+      x.className += " responsive";
+    } else {
+      x.className = "topnav";
+    }
+  }
+  </script>
+  
 {% endblock %}
+

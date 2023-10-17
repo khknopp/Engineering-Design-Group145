@@ -3,10 +3,21 @@
 {% block includes %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"/>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/current.css') }}"/>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" crossorigin="anonymous"></script>
+  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+  <meta http-equiv="refresh" content="3">
 {% endblock %}
 
 
 {% block content %}
+<div class="topnav" id="myTopnav">
+  <a href="/">Home</a>
+  <a href="progress">Progress</a>
+  <a href="#" class="active">Current</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars">Menu</i>
+  </a>
+</div>
 
   <div class="big">
     Current Workout Session
@@ -47,25 +58,26 @@
 
 
           <!--- Palm of the hand -->
-          <text x="250" y="-100" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">P {{ p }}</text>
+          <text x="250" y="-100" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">{{ measurements.P }}</text>
 
           <!--- Index finger (F1) -->
-          <text x="160" y="-530" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">F1 {{ f1 }}</text>
+          <text x="160" y="-530" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">{{ measurements.F1 }}</text>
 
           <!--- Middle finger (F2) -->
-          <text x="290" y="-600" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">F2 {{ f2 }}</text>
+          <text x="290" y="-600" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">{{ measurements.F2 }}</text>
 
           <!--- Ring finger (F3) -->
-          <text x="395" y="-530" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">F3 {{ f3 }}</text>
+          <text x="395" y="-530" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">{{ measurements.F3 }}</text>
 
           <!--- Pinkie (F4) -->
-          <text x="500" y="-410" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">F4 {{ f4 }}</text>
+          <text x="500" y="-410" transform="scale(1, -1)" font-family="Verdana" font-size="20" fill="navy">{{ measurements.F4 }}</text>
         </g>
       </svg>
     </div>
 
     <div class="column">
       <h2>Graph</h2>
+      <div id='plot'></div>
     </div>
 
 
@@ -87,5 +99,17 @@
     </div>
   </div>
 
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+        x.className += " responsive";
+      } else {
+        x.className = "topnav";
+      }
+    }
 
+    var plot_meas = {{plot_meas | safe}};
+    Plotly.plot('plot',plot_meas,{});
+    </script>
 {% endblock %}

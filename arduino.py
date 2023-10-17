@@ -1,7 +1,7 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
 
-async def run():
+async def connect():
     devices = await BleakScanner.discover()
 
     rp2040_address = None
@@ -13,7 +13,7 @@ async def run():
 
     if not rp2040_address:
         print("RP2040 device not found!")
-        return
+        return None, None
 
     client = BleakClient(rp2040_address, timeout=30)
     print("Connecting to device...")
@@ -29,10 +29,42 @@ async def run():
             for char in service.characteristics:
                 if char.uuid == "00002a37-0000-1000-8000-00805f9b34fb":  # Match the characteristic UUID
                     print("Characteristic found!")
-                    while True:
-                        value = await client.read_gatt_char(char.uuid)
-                        print("Random Value:", int.from_bytes(value, byteorder='little'))
-                        await asyncio.sleep(1)
+                    # BleakClient.disconnect(client)
+                    return char, client
+    return 0, 0
+    
+async def read(char, client):
+    value = await client.read_gatt_char(char.uuid)
+    unparsed = int.from_bytes(value, byteorder='little')
+    f1 = unparsed % 100
+    f2 = unparsed // 100 % 100
+    f3 = unparsed // 10000 % 100
+    f4 = unparsed // 1000000 % 100
+    p = unparsed // 100000000
+    return f1,f2,f3,f4,p
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
+#async def run(db, Sessions, Measurements):
+async def run():
+    char, client = await connect()
+    value = await client.read_gatt_char(char.uuid)
+    unparsed = int.from_bytes(value, byteorder='little')
+    f1 = unparsed % 100
+    f2 = unparsed // 100 % 100
+    f3 = unparsed // 10000 % 100
+    f4 = unparsed // 1000000 % 100
+    p = unparsed // 100000000
+    # session = Session(Average = (f1+f2+f3+f4+p)/5, Average_F1=f1, Average_F2=f2, Average_F3=f3, Average_F4=f4, Average_P=p)
+    # db.session.add(session)
+    # measurement = Measurement(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
+    print("Created session!")
+    while True:
+        value = await client.read_gatt_char(char.uuid)
+        print("Value:", int.from_bytes(value, byteorder='little'))
+        await asyncio.sleep(0.1)
+    # db.session.add(session)
+
+# async def main():
+#     await connect
+
+# loop = asyncio.get_event_loop()
+# loop.run_until_complete(run())
