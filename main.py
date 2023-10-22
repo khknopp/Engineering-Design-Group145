@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 from arduino import run, connect, read
 import asyncio
-from plot import plot_all_measurements
+from plot import plot_all_measurements, plot_sessions
 from flask_session import Session
 
 
@@ -125,7 +125,18 @@ async def current():
 @app.route('/progress')
 def progress():
     sessions = Sessions.query.all()
-    return render_template('progress.html', sessions = sessions)
+    average_session = 0
+    for session in sessions:
+        average_session += session.Average
+    average_session /= len(sessions)
+
+    average_number_of_measurements = 0
+    for session in sessions:
+        average_number_of_measurements += len(Measurements.query.filter_by(Session_Id=session.Id).all())
+    average_number_of_measurements /= len(sessions)
+
+    plot_sess = plot_sessions(sessions)
+    return render_template('progress.html', sessions = sessions, plot_sess=plot_sess, number=len(sessions), average_session=round(average_session,2), average_number_of_measurements=round(average_number_of_measurements,2))
 
 
 if __name__ == '__main__':

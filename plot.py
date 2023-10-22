@@ -31,4 +31,24 @@ async def plot_all_measurements(all_measurements):
     df = pd.DataFrame({'x': numbering, 'f1': f1, 'f2': f2, 'f3': f3, 'f4': f4, 'p': p})
     plot = px.line(df, x='x', y=['f1','f2','f3','f4','p'], title='Measurements')
     return json.dumps(plot, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
+def plot_sessions(all_sessions):
+    f1 = []
+    f2 = []
+    f3 = []
+    f4 = []
+    p = []
+    numbering = []
+    print(len(all_sessions))
+    for session in all_sessions:
+        print(session)
+        f1.append(session.Average_F1)
+        f2.append(session.Average_F2)
+        f3.append(session.Average_F3)
+        f4.append(session.Average_F4)
+        p.append(session.Average_P)
+    for i in range(len(all_sessions)):
+        numbering.append(i)
+    df = pd.DataFrame({'x': numbering, 'f1': f1, 'f2': f2, 'f3': f3, 'f4': f4, 'p': p})
+    plot = px.line(df, x='x', y=['f1','f2','f3','f4','p'], title='Session progression')
+    return json.dumps(plot, cls=plotly.utils.PlotlyJSONEncoder)

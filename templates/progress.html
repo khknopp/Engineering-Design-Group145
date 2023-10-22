@@ -2,6 +2,8 @@
 
 {% block includes %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"/>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" crossorigin="anonymous"></script>
+  <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 {% endblock %}
 
 
@@ -14,11 +16,16 @@
     <i class="fa fa-bars">Menu</i>
   </a>
 </div>
-  {% for session in sessions %}
-    <hr/>
-    {{ session }} <br/>
-    {{ session.Id }}, Average score: {{ session.Average }}!
-  {% endfor %}
+
+<div>
+  <h1>Session statistics:</h1>
+    <b>Number of sessions: </b>{{ number }}<br/>
+    <b>Average number of measurements: </b>{{ average_number_of_measurements }}<br/>
+    <b>Average score: </b>{{ average_session }}<br/><br/>
+</div>
+
+<div id='plot'></div>
+
 
   <script>
     function myFunction() {
@@ -29,5 +36,7 @@
         x.className = "topnav";
       }
     }
+    var plot_sess = {{plot_sess | safe}};
+    Plotly.plot('plot',plot_sess,{});
     </script>
 {% endblock %}
