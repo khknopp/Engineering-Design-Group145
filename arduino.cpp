@@ -52,7 +52,6 @@ void loop() {
       value = map(analogRead(F4_PIN), 0, 1023, 0, 99);
       value *= 100;
       value = map(analogRead(P_PIN), 0, 1023, 0, 99);
-      value *= 100;
       randomCharacteristic.writeValue(value);
       delay(1000);
     }
