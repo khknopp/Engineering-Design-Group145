@@ -5,9 +5,6 @@ BLEIntCharacteristic randomCharacteristic("2A37", BLERead);
 
 const int F1_PIN = 3;
 const int F2_PIN = 4;
-const int F3_PIN = 5;
-const int F4_PIN = 6;
-const int P_PIN = 7;
 
 int value;
 
@@ -42,18 +39,12 @@ void loop() {
     Serial.println(central.address());
     
     while (central.connected()) {
-      // int randomNumber = random(0, 1024);
-      value = map(analogRead(F1_PIN), 0, 1023, 0, 99);
-      value *= 100;
-      value = map(analogRead(F2_PIN), 0, 1023, 0, 99);
-      value *= 100;
-      value = map(analogRead(F3_PIN), 0, 1023, 0, 99);
-      value *= 100;
-      value = map(analogRead(F4_PIN), 0, 1023, 0, 99);
-      value *= 100;
-      value = map(analogRead(P_PIN), 0, 1023, 0, 99);
-      value *= 100;
-      randomCharacteristic.writeValue(value);
+      int randomNumber = random(0, 1024);
+      value = analogRead(F1_PIN);
+      Serial.println(value);
+      value = analogRead(F2_PIN);
+      Serial.println(value);
+      randomCharacteristic.writeValue(9985071436);
       delay(1000);
     }
 
