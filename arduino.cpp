@@ -9,7 +9,7 @@ const int F3_PIN = 5;
 const int F4_PIN = 6;
 const int P_PIN = 7;
 
-int value;
+int value = 1;
 
 void setup() {
   // Start serial communication for debugging
@@ -43,16 +43,22 @@ void loop() {
     
     while (central.connected()) {
       // int randomNumber = random(0, 1024);
-      value = map(analogRead(F1_PIN), 0, 1023, 0, 99);
+      value = 1 + map(analogRead(F1_PIN), 0, 10, 0, 99); //does it not overwrite at the moment
       value *= 100;
-      value = map(analogRead(F2_PIN), 0, 1023, 0, 99);
+      value += 1 + map(analogRead(F2_PIN), 0, 10, 0, 99);
       value *= 100;
-      value = map(analogRead(F3_PIN), 0, 1023, 0, 99);
+      value += 1 + map(analogRead(F3_PIN), 0, 10, 0, 99);
       value *= 100;
-      value = map(analogRead(F4_PIN), 0, 1023, 0, 99);
+      value += 1 + map(analogRead(F4_PIN), 0, 10, 0, 99);
       value *= 100;
-      value = map(analogRead(P_PIN), 0, 1023, 0, 99);
+      value += 1 + map(analogRead(P_PIN), 0, 10, 0, 99);
       randomCharacteristic.writeValue(value);
+      Serial.println(value);
+      Serial.println(analogRead(F1_PIN));
+      Serial.println(analogRead(F2_PIN));
+      Serial.println(analogRead(F3_PIN));
+      Serial.println(analogRead(F4_PIN));
+      Serial.println(analogRead(P_PIN));
       delay(1000);
     }
 

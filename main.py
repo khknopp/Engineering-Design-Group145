@@ -54,6 +54,45 @@ app.app_context().push()
 db.create_all()
 global client, char
 
+def update_averages(measurements, sessions):
+    # Write code to update the averages of the sessions based on the measurements
+    # measurements: list of Measurements objects
+    # sessions: list of Sessions objects
+    # returns: None
+    # Example usage:
+    # measurements = Measurements.query.filter_by(Session_Id=session.Id).all()
+    # sessions = Sessions.query.all()
+    # update_averages(measurements, sessions)
+    # db.session.commit()
+    for session in sessions:
+        measurements = Measurements.query.filter_by(Session_Id=session.Id).all()
+        if len(measurements) > 0:
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            p = []
+            for measurement in measurements:
+                f1.append(measurement.F1)
+                f2.append(measurement.F2)
+                f3.append(measurement.F3)
+                f4.append(measurement.F4)
+                p.append(measurement.P)
+            session.Average_F1 = sum(f1)/len(f1)
+            session.Average_F2 = sum(f2)/len(f2)
+            session.Average_F3 = sum(f3)/len(f3)
+            session.Average_F4 = sum(f4)/len(f4)
+            session.Average_P = sum(p)/len(p)
+            session.Average = (session.Average_F1 + session.Average_F2 + session.Average_F3 + session.Average_F4 + session.Average_P)/5
+        else:
+            session.Average_F1 = 0
+            session.Average_F2 = 0
+            session.Average_F3 = 0
+            session.Average_F4 = 0
+            session.Average_P = 0
+            session.Average = 0
+    db.session.commit()
+
 
 client, char = 0, 0
 
@@ -71,60 +110,50 @@ def main():
             return redirect(url_for("progress"))
     return render_template('index.html')
 
-@app.route('/whatever')
+@app.route('/establish')
 async def whatever():
     global client, char
-    client, char = await connect()
+    char, client = await connect()
     print(client, char)
-
-# @app.route('/current')
-# async def current():
-#     char, client = await connect()
-#     if(char and client):
-#         print("Connected!")
-#         f1,f2,f3,f4,p = await read(char,client)
-#         session = Sessions.query.order_by(Sessions.Id.desc()).first()
-#         measurement = Measurements(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
-#         db.session.add(measurement)
-#         db.session.commit()
-#         print("Added measurement!")
-#     else:
-#         print("Did not add a measurement!")
-#     session = Sessions.query.order_by(Sessions.Id.desc()).first()
-#     try:
-#         measurements = Measurements.query.filter_by(Session_Id=session.Id).order_by(Measurements.Session_Id.desc()).first()
-#         all_measurements = Measurements.query.filter_by(Session_Id=session.Id).all()
-#         plot_meas = await plot_all_measurements(all_measurements)
-#     except:
-#         print("Does not work")
-#         measurements = []
-#     prev = 1
-#     return render_template('current.html', session = session, measurements = measurements, plot_meas=plot_meas)
+    return "Connection attempted!", 200
 
 @app.route('/current')
-async def current():
-    global client, char
-    f1,f2,f3,f4,p = await read(client, char)
-    session = Sessions.query.order_by(Sessions.Id.desc()).first()
-    measurement = Measurements(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
-    db.session.add(measurement)
-    db.session.commit()
-    print("Added measurement!")
+
+async def current(prev=0):
+    # char, client = await connect() #i think you want this only once
+
+    if(char and client):
+        print("Connected!")
+        f1,f2,f3,f4,p = await read(char,client)
+        print(f1,f2,f3,f4,p)
+        session = Sessions.query.order_by(Sessions.Id.desc()).first()
+        measurement = Measurements(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
+        db.session.add(measurement)
+        db.session.commit()
+        print("Added measurement!")
+    else:
+        print("Did not add a measurement!")
     session = Sessions.query.order_by(Sessions.Id.desc()).first()
     try:
-        measurements = Measurements.query.filter_by(Session_Id=session.Id).order_by(Measurements.Session_Id.desc()).first()
+        measurements = Measurements.query.filter_by(Session_Id=session.Id).order_by(Measurements.Id.desc()).first()
+        print(measurements)
         all_measurements = Measurements.query.filter_by(Session_Id=session.Id).all()
         plot_meas = await plot_all_measurements(all_measurements)
     except:
         print("Does not work")
         measurements = []
+        
     prev = 1
     return render_template('current.html', session = session, measurements = measurements, plot_meas=plot_meas)
-
 
 @app.route('/progress')
 def progress():
     sessions = Sessions.query.all()
+    all_measurements = Measurements.query.all()
+
+    update_averages(all_measurements, sessions)
+
+
     average_session = 0
     for session in sessions:
         average_session += session.Average

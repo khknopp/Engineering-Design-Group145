@@ -35,7 +35,8 @@ async def connect():
     
 async def read(char, client):
     value = await client.read_gatt_char(char.uuid)
-    unparsed = int.from_bytes(value, byteorder='little')
+    unparsed = int.from_bytes(value, byteorder='little') #is this correct?
+    print(unparsed)
     f1 = unparsed % 100
     f2 = unparsed // 100 % 100
     f3 = unparsed // 10000 % 100
@@ -43,28 +44,30 @@ async def read(char, client):
     p = unparsed // 100000000
     return f1,f2,f3,f4,p
 
-#async def run(db, Sessions, Measurements):
-async def run():
+async def run(db, Sessions, Measurements):
+#async def run():
     char, client = await connect()
-    value = await client.read_gatt_char(char.uuid)
+    value = await client.read_gatt_char(char.uuid) 
     unparsed = int.from_bytes(value, byteorder='little')
     f1 = unparsed % 100
     f2 = unparsed // 100 % 100
     f3 = unparsed // 10000 % 100
     f4 = unparsed // 1000000 % 100
     p = unparsed // 100000000
-    # session = Session(Average = (f1+f2+f3+f4+p)/5, Average_F1=f1, Average_F2=f2, Average_F3=f3, Average_F4=f4, Average_P=p)
-    # db.session.add(session)
-    # measurement = Measurement(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
+    session = Sessions(Average = (f1+f2+f3+f4+p)/5, Average_F1=f1, Average_F2=f2, Average_F3=f3, Average_F4=f4, Average_P=p)
+    db.session.add(session)
+    measurement = Measurements(Session_Id=session.Id, F1=f1, F2=f2, F3=f3, F4=f4, P=p)
     print("Created session!")
     while True:
         value = await client.read_gatt_char(char.uuid)
         print("Value:", int.from_bytes(value, byteorder='little'))
         await asyncio.sleep(0.1)
-    # db.session.add(session)
+    db.session.add(session)
 
 # async def main():
 #     await connect
 
 # loop = asyncio.get_event_loop()
 # loop.run_until_complete(run())
+#loop= connect()
+#asyncio.run(loop)
